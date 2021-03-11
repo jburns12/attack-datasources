@@ -330,7 +330,7 @@
   references:
     - https://docs.microsoft.com/en-us/windows/win32/sysinfo/registry
 - name: Logon session
-  definition: Information about logon sessions being created or terminated by accounts (Local or Domain), interactively or over the network, in order to interact with network resources, applications, or services. 
+  definition: Information about logon sessions being created or terminated by accounts (Local, Domain, or Cloud), interactively or over the network, in order to interact with network resources, applications, or services. 
   collection_layers:
     - host
   platforms:
@@ -615,6 +615,7 @@
         - source_data_element: user
           relationship: removed access
           target_data_element: user
+        - source_data_element: user
   references:
     - https://docs.microsoft.com/en-us/windows/security/identity-protection/access-control/security-principals
 - name: Schedule Task
@@ -675,3 +676,294 @@
           target_data_element: dns query
   references:
     - https://docs.microsoft.com/en-us/windows-server/networking/dns/dns-top
+- name: Image
+  definition: Information about a virtual machine image.
+  collection_layers:
+    - cloud
+  platforms:
+    - IaaS
+  contributors: 
+    - ATT&CK
+  data_components:
+    - name: image creation
+      type: activity
+      relationships:
+        - source_data_element: user
+          relationship: created
+          target_data_element: image
+    - name: image modification
+      type: activity
+      relationships:
+        - source_data_element: user
+          relationship: modified
+          target_data_element: image
+    - name: image deletion
+      type: activity
+      relationships:
+        - source_data_element: user
+          relationship: deleted
+          target_data_element: image
+  references:
+    - https://docs.microsoft.com/en-us/azure/virtual-machines/windows/capture-image-resource
+    - https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html
+- name: Instance
+  definition: Information about a virtual system within a cloud environment.
+  collection_layers:
+    - cloud
+  platforms:
+    - IaaS
+  contributors: 
+    - ATT&CK
+  data_components:
+    - name: instance creation
+      type: activity
+      relationships:
+        - source_data_element: user
+          relationship: created
+          target_data_element: instance
+        - source_data_element: user
+          relationships: ran
+          target_data_element: instance
+    - name: instance modification
+      type: activity
+      relationships:
+        - source_data_element: user
+          relationship: modified
+          target_data_element: instance
+        - source_data_element: user
+          relationship: attached
+          target_data_element: disk/volume
+        - source_data_element: user
+          relationship: detached
+          target_data_element: disk/volume
+        - source_data_element: user
+          relationship: updated
+          target_data_element: instance
+    - name: instance deletion
+      type: activity
+      relationships:
+        - source_data_element: user
+          relationship: deleted
+          target_data_element: instance
+        - source_data_element: user
+          relationship: terminated
+          target_data_element: instance
+    - name: instance metadata
+      type: activity
+      relationships:
+        - source_data_element: user
+          relationship: retrieved information about
+          target_data_element: instance
+    - name: instance enumerated
+      type: activity
+      relationships:
+        - source_data_element: user
+          relationship: listed
+          target_data_element: instances
+        - source_data_element: user
+          relationship: described
+          target_data_element: instances
+        - source_data_element: user
+          relationship: viewed
+          target_data_element: instance
+    - name: instance start
+      type: activity
+      relationships:
+        - source_data_element: user
+          relationship: started
+          target_data_element: instance
+        - source_data_element: user
+          relationship: ran
+          target_data_element: instance
+        - source_data_element: user
+          relationship: redeployed
+          target_data_element: instance
+    - name: instance stop
+      type: activity
+      relationships:
+        - source_data_element: user
+          relationship: stopped
+          target_data_element: instance
+        - source_data_element: user
+          relationship: powered off
+          target_data_element: instance
+  references:
+    - https://aws.amazon.com/ec2/?ec2-whats-new.sort-by=item.additionalFields.postDateTime&ec2-whats-new.sort-order=desc
+    - https://azure.microsoft.com/en-us/overview/what-is-a-virtual-machine/
+    - https://cloud.google.com/compute/docs/instances
+- name: Cloud Service
+  definition: Information about a service available within a cloud environment.
+  collection_layers:
+    - cloud
+  platforms:
+    - IaaS
+    - SaaS
+    - Office 365
+    - Azure AD
+  contributors: 
+    - ATT&CK
+  data_components:
+    - name: cloud service modification
+      type: activity
+      relationships:
+        - source_data_element: user
+          relationship: modified
+          target_data_element: service
+        - source_data_element: user
+          relationship: disabled
+          target_data_element: service
+    - name: cloud service metadata
+      type: activity
+      relationships:
+        - source_data_element: user
+          relationship: retrieved information about
+          target_data_element: cloud service
+    - name: cloud service enumeration
+      type: activity
+      relationships:
+        - source_data_element: user
+          relationship: listed
+          target_data_element: cloud services
+  references:
+    - https://aws.amazon.com
+    - https://azure.microsoft.com/en-us/services/
+- name: Snapshot
+  definition: Information associated with the state of a system at a particular point in time.
+  collection_layers:
+    - cloud
+  platforms:
+    - IaaS
+  contributors: 
+    - ATT&CK
+  data_components:
+    - name: snapshot creation
+      type: activity
+      relationships:
+        - source_data_element: user
+          relationship: created
+          target_data_element: snapshot
+    - name: snapshot modification
+      type: activity
+      relationships:
+        - source_data_element: user
+          relationship: modified
+          target_data_element: snapshot
+        - source_data_element: user
+          relationship: updated
+          target_data_element: snapshot
+    - name: snapshot deletion
+      type: activity
+      relationships:
+        - source_data_element: user
+          relationship: deleted
+          target_data_element: snapshot
+    - name: snapshot metadata
+      type: activity
+      relationships:
+        - source_data_element: user
+          relationship: retrieved information about
+          target_data_element: snapshot
+    - name: snapshot enumeration
+      type: activity
+      relationships:
+        - source_data_element: user
+          relationship: listed
+          target_data_element: snapshots
+  references:
+    - https://docs.microsoft.com/en-us/azure/virtual-machines/linux/snapshot-copy-managed-disk
+    - https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSSnapshots.html
+- name: Storage
+  definition: Information associated with data object storage provided by a cloud vendor.
+  collection_layers:
+    - cloud
+  platforms:
+    - IaaS
+  contributors: 
+    - ATT&CK
+  data_components:
+    - name: storage creation
+      type: activity
+      relationships:
+        - source_data_element: user
+          relationship: created
+          target_data_element: cloud storage
+        - source_data_element: user
+          relationship: created
+          target_data_element: cloud storage object
+    - name: storage deletion
+      type: activity
+      relationships:
+        - source_data_element: user
+          relationship: deleted
+          target_data_element: cloud storage
+        - source_data_element: user
+          relationship: deleted
+          target_data_element: cloud storage object
+    - name: storage metadata
+      type: activity
+      relationships:
+        - source_data_element: user
+          relationship: retrieved information about
+          target_data_element: cloud storage
+    - name: storage enumeration
+      type: activity
+      relationships:
+        - source_data_element: user
+          relationship: listed
+          target_data_element: cloud storage
+        - source_data_element: user
+          relationship: listed
+          target_data_element: cloud storage objects
+    - name: storage access
+      type: activity
+      relationships:
+        - source_data_element: user
+          relationship: accessed
+          target_data_element: cloud storage object
+  references:
+    - https://aws.amazon.com/s3/
+    - https://azure.microsoft.com/en-us/services/storage/blobs/
+    - https://cloud.google.com/storage
+- name: Volume
+  definition: Information associated with accessible storage areas with a single file system.
+  collection_layers:
+    - cloud
+  platforms:
+    - IaaS
+  contributors: 
+    - ATT&CK
+  data_components:
+    - name: volume creation
+      type: activity
+      relationships:
+        - source_data_element: user
+          relationship: created
+          target_data_element: volume
+    - name: volue modification
+      type: activity
+      relationships:
+        - source_data_element: user
+          relationship: modified
+          target_data_element: volume
+    - name: volume deletion
+      type: activity
+      relationships:
+        - source_data_element: user
+          relationship: deleted
+          target_data_element: volume
+    - name: volume metadata
+      type: activity
+      relationships:
+        - source_data_element: user
+          relationship: retrieved information about
+          target_data_element: volume
+    - name: volume enumeration
+      type: activity
+      relationships:
+        - source_data_element: user
+          relationship: listed
+          target_data_element: volumes
+  references:
+    - https://aws.amazon.com/s3/
+    - https://azure.microsoft.com/en-us/services/storage/blobs/
+    - https://cloud.google.com/storage
